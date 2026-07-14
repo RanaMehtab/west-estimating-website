@@ -65,7 +65,14 @@ export const metadata = {
     description: 'Accurate quantity takeoffs and cost estimates. 3–7 day turnaround, ±5% accuracy.'
   },
   robots: { index: true, follow: true },
-  icons: { icon: '/favicon.svg', apple: '/images/logo.jpeg' }
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/images/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/images/icon-512.png', sizes: '512x512', type: 'image/png' }
+    ],
+    apple: '/images/apple-touch-icon.png'
+  }
 };
 
 export const viewport = {
