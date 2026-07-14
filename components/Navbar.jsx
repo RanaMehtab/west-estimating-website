@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation';
 import Icon from './Icon.jsx';
 import { services } from '../lib/services.js';
 
+const CATEGORY_ORDER = [...new Set(services.map((s) => s.category))];
+
 function NavItem({ href, exact = false, className = '', children }) {
   const pathname = usePathname();
   const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(href + '/');
@@ -21,6 +23,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(CATEGORY_ORDER[0]);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -84,18 +87,34 @@ export default function Navbar() {
                 <h4>Complete estimating coverage</h4>
                 <p>From conceptual budgets to bid-ready takeoffs across every trade.</p>
               </div>
-              <div className="nav__menu-grid">
-                {services.slice(0, 8).map((s) => (
-                  <Link key={s.slug} href={`/services/${s.slug}`} className="nav__menu-item">
-                    <span className="nav__menu-item-icon">
-                      <Icon name={s.icon} size={18} />
-                    </span>
-                    <div>
-                      <strong>{s.title}</strong>
-                      <span>{s.shortDescription}</span>
+              <div className="nav__menu-list">
+                {CATEGORY_ORDER.map((cat) => {
+                  const items = services.filter((s) => s.category === cat);
+                  const isActive = activeCategory === cat;
+                  return (
+                    <div
+                      key={cat}
+                      className={`nav__menu-cat ${isActive ? 'is-active' : ''}`}
+                      onMouseEnter={() => setActiveCategory(cat)}
+                    >
+                      <span className="nav__menu-cat-label">
+                        {cat}
+                        <Icon name="arrow" size={13} />
+                      </span>
+
+                      {isActive && (
+                        <div className="nav__menu-flyout">
+                          {items.map((s) => (
+                            <Link key={s.slug} href={`/services/${s.slug}`} className="nav__menu-flyout-item">
+                              <Icon name={s.icon} size={16} />
+                              <span>{s.title}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
               <Link href="/services" className="nav__menu-foot">
                 View all services
@@ -255,12 +274,12 @@ export default function Navbar() {
           top: calc(100% + 8px);
           left: 50%;
           transform: translateX(-50%) translateY(-6px);
-          width: 720px;
+          width: 300px;
           background: white;
           border: 1px solid var(--c-border);
           border-radius: var(--radius-lg);
           box-shadow: var(--shadow-lg);
-          padding: 24px;
+          padding: 20px;
           opacity: 0;
           visibility: hidden;
           transition: opacity var(--t), transform var(--t), visibility var(--t);
@@ -271,8 +290,8 @@ export default function Navbar() {
           transform: translateX(-50%) translateY(0);
         }
         .nav__menu-head {
-          padding: 0 8px 16px;
-          margin-bottom: 12px;
+          padding: 0 4px 14px;
+          margin-bottom: 8px;
           border-bottom: 1px solid var(--c-border);
         }
         .nav__menu-head h4 {
@@ -284,46 +303,63 @@ export default function Navbar() {
           color: var(--c-text-muted);
           margin: 0;
         }
-        .nav__menu-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4px;
-        }
-        .nav__menu-item {
+        .nav__menu-list {
           display: flex;
-          gap: 12px;
-          padding: 10px 12px;
-          border-radius: var(--radius);
-          color: var(--c-text);
-          transition: background var(--t-fast);
+          flex-direction: column;
+          gap: 2px;
         }
-        .nav__menu-item:hover {
-          background: var(--c-bg-alt);
-          color: var(--c-ink);
+        .nav__menu-cat {
+          position: relative;
         }
-        .nav__menu-item-icon {
-          flex-shrink: 0;
-          width: 34px;
-          height: 34px;
+        .nav__menu-cat-label {
           display: flex;
           align-items: center;
-          justify-content: center;
-          background: var(--c-bg-tint);
-          color: var(--c-ink);
-          border-radius: var(--radius-sm);
-        }
-        .nav__menu-item strong {
-          display: block;
+          justify-content: space-between;
+          gap: 8px;
+          padding: 12px 14px;
+          border-radius: var(--radius);
           font-family: var(--font-display);
-          font-size: 0.875rem;
+          font-size: 0.9375rem;
           font-weight: 600;
-          color: var(--c-ink);
-          margin-bottom: 2px;
+          color: var(--c-text);
+          cursor: default;
+          transition: background var(--t-fast), color var(--t-fast);
         }
-        .nav__menu-item span {
-          font-size: 0.75rem;
-          color: var(--c-text-muted);
-          line-height: 1.45;
+        .nav__menu-cat-label svg { color: var(--c-text-faint); flex-shrink: 0; }
+        .nav__menu-cat.is-active .nav__menu-cat-label {
+          background: var(--c-amber);
+          color: var(--c-ink-deep);
+        }
+        .nav__menu-cat.is-active .nav__menu-cat-label svg { color: var(--c-ink-deep); }
+        .nav__menu-flyout {
+          position: absolute;
+          top: -1px;
+          left: calc(100% + 8px);
+          width: 280px;
+          background: white;
+          border: 1px solid var(--c-border);
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-lg);
+          padding: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .nav__menu-flyout-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 12px;
+          border-radius: var(--radius);
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: var(--c-text);
+          transition: background var(--t-fast), color var(--t-fast);
+        }
+        .nav__menu-flyout-item svg { flex-shrink: 0; color: var(--c-amber-deep); }
+        .nav__menu-flyout-item:hover {
+          background: var(--c-bg-alt);
+          color: var(--c-ink);
         }
         .nav__menu-foot {
           display: inline-flex;

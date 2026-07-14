@@ -12,13 +12,19 @@ import nodemailer from 'nodemailer';
  *   SMTP_PORT   465 (SSL) or 587 (STARTTLS)
  *   SMTP_USER   the mailbox that sends the notification, e.g. sales@westestimating.com
  *   SMTP_PASS   that mailbox's password
- *   CONTACT_TO  where submissions are delivered, e.g. sales@westestimating.com
+ *   CONTACT_TO  where submissions are delivered — defaults to
+ *               josephwilliamrichards@gmail.com below if not set, so you
+ *               don't have to set this env var unless you want to change it
  *
  * If SMTP isn't configured yet (e.g. first local run), submissions are
  * simply logged to the console instead of failing outright.
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Default inbox for contact-form submissions. Override by setting the
+// CONTACT_TO environment variable in your Hostinger hosting panel.
+const DEFAULT_CONTACT_TO = 'josephwilliamrichards@gmail.com';
 
 export async function POST(request) {
   let body;
@@ -78,7 +84,7 @@ export async function POST(request) {
         throw verifyErr;
       }
 
-      const to = CONTACT_TO || SMTP_USER;
+      const to = CONTACT_TO || DEFAULT_CONTACT_TO;
 
       await transporter.sendMail({
         from: `"West Estimating Website" <${SMTP_USER}>`,
@@ -185,7 +191,7 @@ export async function GET() {
       host: SMTP_HOST,
       port,
       user: SMTP_USER,
-      to: CONTACT_TO || SMTP_USER,
+      to: CONTACT_TO || DEFAULT_CONTACT_TO,
       message: 'SMTP connection and authentication succeeded.'
     });
   } catch (err) {

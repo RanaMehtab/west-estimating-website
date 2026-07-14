@@ -12,7 +12,7 @@ const INFO = [
     icon: 'phone',
     label: 'Call us',
     value: '(737) 770-7167',
-    sub: 'Mon–Fri 7am–7pm CST',
+    sub: 'Mon–Fri 8am–5pm CST',
     href: 'tel:+17377707167'
   },
   {
@@ -32,8 +32,8 @@ const INFO = [
   {
     icon: 'clock',
     label: 'Hours',
-    value: 'Mon–Fri · 7am–7pm CST',
-    sub: 'Saturday · 9am–4pm CST',
+    value: 'Mon–Fri · 8am–5pm CST',
+    sub: 'Closed weekends',
     href: null
   }
 ];

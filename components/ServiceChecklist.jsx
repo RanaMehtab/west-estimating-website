@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
 import useReveal from '../hooks/useReveal.js';
 
@@ -68,8 +69,54 @@ const GROUPS = [
   }
 ];
 
+function ChecklistRow({ group, isOpen, onToggle, index }) {
+  const panelRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    setHeight(isOpen ? el.scrollHeight : 0);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleResize() {
+      if (panelRef.current) setHeight(panelRef.current.scrollHeight);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isOpen]);
+
+  return (
+    <div className={`checklist__row reveal ${isOpen ? 'is-open' : ''}`} style={{ '--reveal-delay': `${index * 50}ms` }}>
+      <button className="checklist__row-head" onClick={onToggle} type="button" aria-expanded={isOpen}>
+        <span className="checklist__row-icon">
+          <Icon name={group.icon} size={20} />
+        </span>
+        <span className="checklist__row-title">{group.title}</span>
+        <span className="checklist__row-count">{group.items.length}</span>
+        <span className="checklist__row-chevron">
+          <Icon name={isOpen ? 'minus' : 'plus'} size={16} />
+        </span>
+      </button>
+      <div className="checklist__row-panel" style={{ maxHeight: `${height}px` }}>
+        <ul className="checklist__row-list" ref={panelRef}>
+          {group.items.map((item) => (
+            <li key={item}>
+              <Icon name="check" size={14} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export default function ServiceChecklist() {
   useReveal();
+  const [openIndex, setOpenIndex] = useState(0);
 
   return (
     <section className="checklist section">
@@ -83,54 +130,48 @@ export default function ServiceChecklist() {
           </p>
         </div>
 
-        <div className="checklist__groups">
-          {GROUPS.map((g, gi) => (
-            <div
+        <div className="checklist__list">
+          {GROUPS.map((g, i) => (
+            <ChecklistRow
               key={g.title}
-              className="checklist__group reveal"
-              style={{ '--reveal-delay': `${gi * 60}ms` }}
-            >
-              <div className="checklist__group-head">
-                <span className="checklist__group-icon">
-                  <Icon name={g.icon} size={20} />
-                </span>
-                <h3>{g.title}</h3>
-              </div>
-              <ul className="checklist__list">
-                {g.items.map((item) => (
-                  <li key={item}>
-                    <Icon name="check" size={14} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              group={g}
+              index={i}
+              isOpen={openIndex === i}
+              onToggle={() => setOpenIndex(openIndex === i ? -1 : i)}
+            />
           ))}
         </div>
       </div>
 
       <style>{`
-        .checklist__groups {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
-          margin-top: 40px;
+        .checklist__list {
+          max-width: 820px;
+          margin: 40px auto 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
-        .checklist__group {
-          padding: 28px 30px;
+        .checklist__row {
           background: white;
           border: 1px solid var(--c-border);
           border-radius: var(--radius-lg);
+          overflow: hidden;
+          transition: border-color var(--t), box-shadow var(--t);
         }
-        .checklist__group-head {
-          display: flex;
+        .checklist__row.is-open {
+          border-color: var(--c-border-strong);
+          box-shadow: var(--shadow);
+        }
+        .checklist__row-head {
+          width: 100%;
+          display: grid;
+          grid-template-columns: auto 1fr auto auto;
           align-items: center;
-          gap: 12px;
-          margin-bottom: 18px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid var(--c-border);
+          gap: 16px;
+          padding: 18px 22px;
+          text-align: left;
         }
-        .checklist__group-icon {
+        .checklist__row-icon {
           flex-shrink: 0;
           width: 40px;
           height: 40px;
@@ -141,29 +182,65 @@ export default function ServiceChecklist() {
           color: var(--c-amber);
           border-radius: var(--radius);
         }
-        .checklist__group-head h3 {
+        .checklist__row-title {
+          font-family: var(--font-display);
           font-size: 1.0625rem;
+          font-weight: 700;
+          color: var(--c-ink);
+        }
+        .checklist__row-count {
+          font-family: var(--font-mono);
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 3px 9px;
+          background: var(--c-bg-tint);
+          color: var(--c-text-muted);
+          border-radius: 100px;
+        }
+        .checklist__row-chevron {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--c-bg-alt);
+          border-radius: var(--radius-sm);
+          color: var(--c-ink);
+          transition: background var(--t-fast), color var(--t-fast);
+        }
+        .checklist__row.is-open .checklist__row-chevron {
+          background: var(--c-ink);
+          color: var(--c-amber);
+        }
+        .checklist__row-panel {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height var(--t-slow) ease;
+        }
+        .checklist__row-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 4px 22px 22px 78px;
           margin: 0;
         }
-        .checklist__list {
-          list-style: none;
-          display: grid;
-          gap: 11px;
-        }
-        .checklist__list li {
+        .checklist__row-list li {
           display: flex;
           align-items: center;
           gap: 10px;
+          padding: 8px 0;
           font-size: 0.9375rem;
           color: var(--c-text);
+          border-bottom: 1px dashed var(--c-border);
         }
-        .checklist__list svg {
-          flex-shrink: 0;
-          color: var(--c-amber-deep);
-        }
+        .checklist__row-list li:last-child { border-bottom: none; }
+        .checklist__row-list svg { flex-shrink: 0; color: var(--c-amber-deep); }
 
-        @media (max-width: 900px) {
-          .checklist__groups { grid-template-columns: 1fr; }
+        @media (max-width: 600px) {
+          .checklist__row-head { grid-template-columns: auto 1fr auto; gap: 10px; padding: 16px; }
+          .checklist__row-count { display: none; }
+          .checklist__row-list { padding: 4px 16px 18px 16px; }
         }
       `}</style>
     </section>

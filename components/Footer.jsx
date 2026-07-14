@@ -113,11 +113,11 @@ export default function Footer() {
           <ul className="footer__hours">
             <li>
               <span>Mon – Fri</span>
-              <span className="footer__time">7:00 AM – 7:00 PM CST</span>
+              <span className="footer__time">8:00 AM – 5:00 PM CST</span>
             </li>
             <li>
               <span>Saturday</span>
-              <span className="footer__time">9:00 AM – 4:00 PM CST</span>
+              <span className="footer__time footer__time--muted">Closed</span>
             </li>
             <li>
               <span>Sunday</span>

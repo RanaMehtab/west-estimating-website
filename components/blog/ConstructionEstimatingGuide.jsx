@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Icon from '../Icon.jsx';
+import { photos } from '../../lib/photos.js';
 
 const CONSIDERS = [
   'Material quantities',
@@ -153,6 +155,19 @@ export default function ConstructionEstimatingGuide() {
         manage budgets more effectively, and plan projects with greater confidence.
       </p>
 
+      <figure className="post__figure">
+        <div className="post__figure-photo">
+          <Image
+            src={photos.blueprintOnSite.src}
+            alt={photos.blueprintOnSite.alt}
+            fill
+            sizes="(max-width: 780px) 90vw, 780px"
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+        <figcaption>Reviewing plans and specifications before every estimate is prepared.</figcaption>
+      </figure>
+
       <h2>What Are Construction Estimating Services?</h2>
       <p>
         Construction estimating is the process of calculating the anticipated cost of completing a
@@ -208,6 +223,19 @@ export default function ConstructionEstimatingGuide() {
           </li>
         ))}
       </ol>
+
+      <figure className="post__figure">
+        <div className="post__figure-photo">
+          <Image
+            src={photos.worker.src}
+            alt={photos.worker.alt}
+            fill
+            sizes="(max-width: 780px) 90vw, 780px"
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+        <figcaption>Field experience behind every takeoff — not just software output.</figcaption>
+      </figure>
 
       <h2>Construction Trades We Support</h2>
       <p>
@@ -309,6 +337,22 @@ export default function ConstructionEstimatingGuide() {
           flex-shrink: 0;
           margin-top: 3px;
           color: var(--c-amber-deep);
+        }
+
+        .post__figure {
+          margin: 32px 0;
+        }
+        .post__figure-photo {
+          position: relative;
+          aspect-ratio: 16 / 9;
+          border-radius: var(--radius-lg);
+          overflow: hidden;
+        }
+        .post__figure figcaption {
+          margin-top: 10px;
+          font-size: 0.8125rem;
+          color: var(--c-text-faint);
+          text-align: center;
         }
 
         .post__why-grid {

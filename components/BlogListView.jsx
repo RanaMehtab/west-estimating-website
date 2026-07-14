@@ -52,6 +52,15 @@ export default function BlogListView() {
                 className="blog-card reveal"
                 style={{ '--reveal-delay': `${i * 60}ms` }}
               >
+                <div className="blog-card__photo">
+                  <Image
+                    src={photos[post.image]?.src || photos.blueprints.src}
+                    alt=""
+                    fill
+                    sizes="(max-width: 900px) 90vw, 360px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
                 <div className="blog-card__body">
                   <span className="blog-card__category">{post.category}</span>
                   <h2>{post.title}</h2>
@@ -94,10 +103,11 @@ export default function BlogListView() {
           }
           .blog-card {
             display: flex;
-            padding: 32px;
+            flex-direction: column;
             background: white;
             border: 1px solid var(--c-border);
             border-radius: var(--radius-lg);
+            overflow: hidden;
             transition: transform var(--t), box-shadow var(--t), border-color var(--t);
             color: var(--c-text);
           }
@@ -106,6 +116,13 @@ export default function BlogListView() {
             box-shadow: var(--shadow);
             border-color: var(--c-border-strong);
             color: var(--c-text);
+          }
+          .blog-card__photo {
+            position: relative;
+            aspect-ratio: 16 / 9;
+          }
+          .blog-card__body {
+            padding: 28px 32px 32px;
           }
           .blog-card__category {
             display: inline-block;
