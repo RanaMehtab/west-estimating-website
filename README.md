@@ -98,11 +98,24 @@ the panel run `npm run start`.
   (free license, no attribution required). Swap any `src` here to replace an
   image everywhere it's used.
 - `app/api/contact/route.js` — validates and emails contact form submissions
-  via SMTP (see section 2 above).
+  via SMTP (see section 2 above). `GET /api/contact` is a diagnostic-only
+  endpoint — visit it directly in a browser on the live site to check
+  whether SMTP env vars are set and whether the server can authenticate
+  with your mail provider, without sending a real email.
+- `lib/blog.js` + `components/blog/*` + `app/blog/` — blog index and post
+  pages. Add a post by adding an entry to `lib/blog.js`, a matching content
+  component in `components/blog/`, and registering it in
+  `lib/blogContent.js`.
+- `next.config.mjs` — `redirects()` 301s old WordPress URLs (still indexed
+  in Google from before the Next.js migration, e.g. `/faqs/`,
+  `/roofing-estimating-services/`) to their closest match on the new site.
+  Add more entries here as you find other old indexed URLs still ranking
+  (Google Search Console → Pages report shows the full list).
 
 ## 5. Editing content
 
 - **Services / trades:** `lib/services.js`
+- **Blog posts:** `lib/blog.js` and `components/blog/`
 - **Contact info, hours, address:** `components/TopBar.jsx`,
   `components/Footer.jsx`, `components/ContactView.jsx`, and the structured
   data block in `app/layout.jsx`
@@ -115,5 +128,10 @@ the panel run `npm run start`.
 - [ ] Domain pointed at the Node.js app in hPanel
 - [ ] `npm run build` succeeds with no errors
 - [ ] Test the contact form on the live domain and confirm the email arrives
-      at sales@westestimating.com
-- [ ] Submit `https://westestimating.com/sitemap.xml` to Google Search Console
+      at sales@westestimating.com — or visit `/api/contact` directly to
+      check SMTP connectivity without submitting the form
+- [ ] Submit `https://westestimating.com/sitemap.xml` to Google Search
+      Console and use URL Inspection → Request Indexing on the homepage
+- [ ] In Google Search Console → Pages, check for any other old WordPress
+      URLs still indexed and add a matching redirect for each in
+      `next.config.mjs`

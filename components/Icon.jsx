@@ -153,6 +153,24 @@ const PATHS = {
     <>
       <polygon points="12 2 15 9 22 10 17 15 18 22 12 18 6 22 7 15 2 10 9 9 12 2" />
     </>
+  ),
+  instagram: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M17.2 6.8h.01" strokeLinecap="round" />
+    </>
+  ),
+  facebook: (
+    <>
+      <path d="M15 4h-2a4 4 0 00-4 4v3H7v4h2v7h4v-7h3l1-4h-4V8a1 1 0 011-1h3V4z" />
+    </>
+  ),
+  linkedin: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M7.5 10v7M7.5 7v.01M11.5 17v-4.5c0-1.4 1-2.5 2.25-2.5S16 11.1 16 12.5V17M11.5 10v7" />
+    </>
   )
 };
 

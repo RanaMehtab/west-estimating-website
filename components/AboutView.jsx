@@ -9,6 +9,19 @@ import CTA from './CTA.jsx';
 import useReveal from '../hooks/useReveal.js';
 import { photos } from '../lib/photos.js';
 
+const INDUSTRIES = [
+  'Residential Construction',
+  'Commercial Construction',
+  'Industrial Projects',
+  'Multi-Family Developments',
+  'Educational Facilities',
+  'Healthcare Facilities',
+  'Hospitality Projects',
+  'Retail Developments',
+  'Warehouses & Distribution Centers',
+  'Government & Public Sector Projects'
+];
+
 const VALUES = [
   {
     icon: 'shield',
@@ -128,6 +141,89 @@ export default function AboutView() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="vision section">
+        <div className="container">
+          <div className="vision__grid">
+            <div className="vision__card reveal">
+              <span className="eyebrow">Our Vision</span>
+              <h2>A trusted global partner for construction design and estimating.</h2>
+              <p>
+                Our vision is to become a trusted global partner for construction design and
+                estimating services by delivering innovative solutions, technical excellence, and
+                exceptional client service. We strive to help our clients make informed decisions
+                and achieve successful project outcomes through accuracy, efficiency, and
+                professional integrity.
+              </p>
+            </div>
+
+            <div className="vision__industries reveal">
+              <span className="eyebrow">Industries We Serve</span>
+              <h3>No project is too small or too complex.</h3>
+              <p>
+                We approach every project with the same level of professionalism, dedication, and
+                attention to detail — across every sector we support.
+              </p>
+              <ul className="vision__industries-list">
+                {INDUSTRIES.map((ind) => (
+                  <li key={ind}>
+                    <Icon name="check" size={14} />
+                    <span>{ind}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          .vision__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+          }
+          .vision__card h2 { margin: 12px 0 16px; }
+          .vision__card p {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--c-text-muted);
+          }
+          .vision__industries {
+            padding: 32px;
+            background: var(--c-bg-alt);
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius-lg);
+          }
+          .vision__industries h3 { margin: 10px 0 8px; font-size: 1.25rem; }
+          .vision__industries > p {
+            font-size: 0.9375rem;
+            color: var(--c-text-muted);
+            line-height: 1.65;
+            margin-bottom: 20px;
+          }
+          .vision__industries-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+          }
+          .vision__industries-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9375rem;
+            color: var(--c-text);
+          }
+          .vision__industries-list svg { color: var(--c-amber-deep); flex-shrink: 0; }
+
+          @media (max-width: 900px) {
+            .vision__grid { grid-template-columns: 1fr; gap: 32px; }
+          }
+          @media (max-width: 520px) {
+            .vision__industries-list { grid-template-columns: 1fr; }
+          }
+        `}</style>
       </section>
 
       <section className="values section section--warm">

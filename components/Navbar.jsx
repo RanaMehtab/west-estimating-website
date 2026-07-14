@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Icon from './Icon.jsx';
 import { services } from '../lib/services.js';
@@ -46,13 +47,7 @@ export default function Navbar() {
       <div className="container nav__inner">
         <Link href="/" className="nav__logo" aria-label="West Estimating — home">
           <span className="nav__logo-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="32" height="32">
-              <rect width="32" height="32" rx="7" fill="var(--c-ink)" />
-              <path
-                d="M7 9 L11 23 L14 15 L17 23 L21 9 L18 9 L15.5 18 L13 9 L11 9 L9.5 15 L7 9 Z"
-                fill="var(--c-amber)"
-              />
-            </svg>
+            <Image src="/images/logo.jpeg" alt="" width={40} height={40} priority />
           </span>
           <span className="nav__logo-text">
             <span className="nav__logo-name">West Estimating</span>
@@ -111,6 +106,9 @@ export default function Navbar() {
           <NavItem href="/contact" className="nav__link">
             Contact
           </NavItem>
+          <NavItem href="/blog" className="nav__link">
+            Blog
+          </NavItem>
         </nav>
 
         <Link href="/contact" className="btn btn--primary nav__cta">
@@ -141,6 +139,9 @@ export default function Navbar() {
           </NavItem>
           <NavItem href="/contact" className="nav__drawer-link">
             Contact
+          </NavItem>
+          <NavItem href="/blog" className="nav__drawer-link">
+            Blog
           </NavItem>
           <Link href="/contact" className="btn btn--primary btn--lg nav__drawer-cta">
             Get a Free Quote
@@ -180,7 +181,13 @@ export default function Navbar() {
           flex-shrink: 0;
         }
         .nav__logo:hover { color: var(--c-ink); }
-        .nav__logo-mark { display: flex; }
+        .nav__logo-mark {
+          display: flex;
+          flex-shrink: 0;
+          border-radius: 9px;
+          overflow: hidden;
+        }
+        .nav__logo-mark img { display: block; width: 40px; height: 40px; object-fit: cover; }
         .nav__logo-text {
           display: flex;
           flex-direction: column;

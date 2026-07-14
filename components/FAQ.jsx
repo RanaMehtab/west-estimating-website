@@ -74,8 +74,8 @@ function FAQItem({ q, a, isOpen, onToggle, index }) {
 
   return (
     <div
-      className={`faq__item ${isOpen ? 'is-open' : ''}`}
-      
+      className={`faq__item reveal ${isOpen ? 'is-open' : ''}`}
+      style={{ '--reveal-delay': `${index * 40}ms` }}
     >
       <button
         className="faq__btn"
@@ -119,7 +119,7 @@ export default function FAQ() {
             </a>
           </div>
 
-          <div className="faq__list reveal">
+          <div className="faq__list">
             {FAQS.map((item, i) => (
               <FAQItem
                 key={item.q}

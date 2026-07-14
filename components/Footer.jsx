@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Icon from './Icon.jsx';
 import { services } from '../lib/services.js';
+import { socialLinks } from '../lib/social.js';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -32,13 +34,9 @@ export default function Footer() {
         {/* Brand column */}
         <div className="footer__brand">
           <Link href="/" className="footer__logo" aria-label="West Estimating">
-            <svg viewBox="0 0 36 36" width="36" height="36" aria-hidden="true">
-              <rect width="36" height="36" rx="8" fill="white" />
-              <path
-                d="M8 10 L12 26 L16 16 L19 26 L23 10 L20 10 L17.5 21 L14.5 10 L12 10 L10.5 17 L8 10 Z"
-                fill="var(--c-amber)"
-              />
-            </svg>
+            <span className="footer__logo-mark">
+              <Image src="/images/logo.jpeg" alt="" width={44} height={44} />
+            </span>
             <span>
               <strong>West Estimating</strong>
               <span>Construction Cost Experts</span>
@@ -61,6 +59,21 @@ export default function Footer() {
               <Icon name="pin" size={16} />
               <span>5900 Balcones Dr Ste 4186, Austin, TX 78731</span>
             </span>
+          </div>
+
+          <div className="footer__social">
+            {socialLinks.map((s) => (
+              <a
+                key={s.name}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer__social-link"
+                aria-label={s.name}
+              >
+                <Icon name={s.icon} size={17} />
+              </a>
+            ))}
           </div>
         </div>
 
@@ -87,6 +100,7 @@ export default function Footer() {
           <ul>
             <li><Link href="/about">About Us</Link></li>
             <li><Link href="/services">All Services</Link></li>
+            <li><Link href="/blog">Blog</Link></li>
             <li><Link href="/contact">Contact</Link></li>
             <li><a href="/#process">Our Process</a></li>
             <li><a href="/#faq">FAQs</a></li>
@@ -200,6 +214,13 @@ export default function Footer() {
           margin-bottom: 18px;
         }
         .footer__logo:hover { color: white; }
+        .footer__logo-mark {
+          display: flex;
+          flex-shrink: 0;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        .footer__logo-mark img { display: block; width: 44px; height: 44px; object-fit: cover; }
         .footer__logo strong {
           display: block;
           font-family: var(--font-display);
@@ -239,6 +260,30 @@ export default function Footer() {
         }
         a.footer__contact:hover { color: var(--c-amber); }
         .footer__contact svg { flex-shrink: 0; margin-top: 2px; color: var(--c-amber); }
+
+        .footer__social {
+          display: flex;
+          gap: 10px;
+          margin-top: 22px;
+        }
+        .footer__social-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: rgba(255, 255, 255, 0.85);
+          transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast), transform var(--t-fast);
+        }
+        .footer__social-link:hover {
+          background: var(--c-amber);
+          border-color: var(--c-amber);
+          color: var(--c-ink-deep);
+          transform: translateY(-2px);
+        }
 
         .footer__col ul {
           list-style: none;

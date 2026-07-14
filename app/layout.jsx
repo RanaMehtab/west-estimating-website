@@ -65,7 +65,7 @@ export const metadata = {
     description: 'Accurate quantity takeoffs and cost estimates. 3–7 day turnaround, ±5% accuracy.'
   },
   robots: { index: true, follow: true },
-  icons: { icon: '/favicon.svg' }
+  icons: { icon: '/favicon.svg', apple: '/images/logo.jpeg' }
 };
 
 export const viewport = {
@@ -93,6 +93,11 @@ const jsonLd = {
   },
   areaServed: 'US',
   priceRange: '$$',
+  sameAs: [
+    'https://www.instagram.com/westestimating?igsh=bTEybHZ2eTdnd29m&utm_source=qr',
+    'https://www.facebook.com/share/1KZ5f2yPE7/?mibextid=wwXIfr',
+    'https://www.linkedin.com/company/west-estimating-llc/'
+  ],
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',

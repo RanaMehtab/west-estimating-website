@@ -1,4 +1,5 @@
 import Icon from './Icon.jsx';
+import { socialLinks } from '../lib/social.js';
 
 export default function TopBar() {
   return (
@@ -18,6 +19,21 @@ export default function TopBar() {
             <Icon name="mail" size={14} />
             <span>sales@westestimating.com</span>
           </a>
+          <span className="topbar__sep" aria-hidden="true"></span>
+          <div className="topbar__social">
+            {socialLinks.map((s) => (
+              <a
+                key={s.name}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="topbar__social-link"
+                aria-label={s.name}
+              >
+                <Icon name={s.icon} size={14} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -78,6 +94,17 @@ export default function TopBar() {
           height: 14px;
           background: rgba(255, 255, 255, 0.18);
         }
+        .topbar__social {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .topbar__social-link {
+          display: flex;
+          color: rgba(255, 255, 255, 0.75);
+          transition: color var(--t-fast);
+        }
+        .topbar__social-link:hover { color: var(--c-amber); }
         @media (max-width: 800px) {
           .topbar__left { display: none; }
           .topbar__inner { justify-content: center; }
@@ -86,6 +113,7 @@ export default function TopBar() {
           .topbar__right { gap: 10px; font-size: 0.75rem; }
           .topbar__link span { display: none; }
           .topbar__link { padding: 6px; }
+          .topbar__social { display: none; }
         }
       `}</style>
     </div>

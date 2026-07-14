@@ -64,6 +64,20 @@ export async function POST(request) {
         auth: { user: SMTP_USER, pass: SMTP_PASS }
       });
 
+      // Verify the connection/auth first so a bad host/port/credential shows
+      // up clearly in the server logs instead of failing deep inside sendMail.
+      try {
+        await transporter.verify();
+      } catch (verifyErr) {
+        console.error('[contact] SMTP verify failed:', {
+          message: verifyErr.message,
+          code: verifyErr.code,
+          responseCode: verifyErr.responseCode,
+          command: verifyErr.command
+        });
+        throw verifyErr;
+      }
+
       const to = CONTACT_TO || SMTP_USER;
 
       await transporter.sendMail({
@@ -100,7 +114,12 @@ export async function POST(request) {
         `
       });
     } catch (err) {
-      console.error('[contact] email send failed:', err);
+      console.error('[contact] email send failed:', {
+        message: err.message,
+        code: err.code,
+        responseCode: err.responseCode,
+        command: err.command
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -127,4 +146,60 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+/**
+ * GET /api/contact — diagnostic only. Visit this URL directly in a browser
+ * on the live site to check whether SMTP env vars are present and whether
+ * the server can actually authenticate with your mail provider, without
+ * sending a real email or exposing credentials in the response.
+ *
+ * Delete this handler once the contact form is confirmed working, or leave
+ * it — it never reveals SMTP_PASS or full error internals to the client.
+ */
+export async function GET() {
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO } = process.env;
+
+  const configured = Boolean(SMTP_HOST && SMTP_USER && SMTP_PASS);
+  if (!configured) {
+    return NextResponse.json({
+      configured: false,
+      message:
+        'SMTP_HOST, SMTP_USER, and/or SMTP_PASS are missing from the environment. Set them in your Hostinger hosting panel (Node.js app → Environment variables), then restart the app.'
+    });
+  }
+
+  const port = Number(SMTP_PORT) || 465;
+  const transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port,
+    secure: port === 465,
+    auth: { user: SMTP_USER, pass: SMTP_PASS }
+  });
+
+  try {
+    await transporter.verify();
+    return NextResponse.json({
+      configured: true,
+      connected: true,
+      host: SMTP_HOST,
+      port,
+      user: SMTP_USER,
+      to: CONTACT_TO || SMTP_USER,
+      message: 'SMTP connection and authentication succeeded.'
+    });
+  } catch (err) {
+    return NextResponse.json({
+      configured: true,
+      connected: false,
+      host: SMTP_HOST,
+      port,
+      user: SMTP_USER,
+      error: err.message,
+      code: err.code || null,
+      responseCode: err.responseCode || null,
+      message:
+        'SMTP is configured but the connection/authentication failed. Double-check SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS — and confirm your host allows outbound SMTP on this port.'
+    });
+  }
 }

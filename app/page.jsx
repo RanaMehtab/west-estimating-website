@@ -10,6 +10,10 @@ import FAQ from '../components/FAQ.jsx';
 import CTA from '../components/CTA.jsx';
 import { services } from '../lib/services.js';
 
+export const metadata = {
+  alternates: { canonical: '/' }
+};
+
 export default function HomePage() {
   return (
     <>

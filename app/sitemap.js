@@ -1,10 +1,11 @@
 import { services } from '../lib/services.js';
 import { galleryItems } from '../lib/gallery.js';
+import { blogPosts } from '../lib/blog.js';
 
 const siteUrl = 'https://westestimating.com';
 
 export default function sitemap() {
-  const staticRoutes = ['', '/about', '/services', '/contact', '/privacy', '/terms'].map((path) => ({
+  const staticRoutes = ['', '/about', '/services', '/blog', '/contact', '/privacy', '/terms'].map((path) => ({
     url: `${siteUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: 'monthly',
@@ -25,5 +26,12 @@ export default function sitemap() {
     priority: 0.5
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...galleryRoutes];
+  const blogRoutes = blogPosts.map((p) => ({
+    url: `${siteUrl}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: 'monthly',
+    priority: 0.6
+  }));
+
+  return [...staticRoutes, ...serviceRoutes, ...galleryRoutes, ...blogRoutes];
 }

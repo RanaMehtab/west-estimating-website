@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ServiceCard from './ServiceCard.jsx';
+import ServiceChecklist from './ServiceChecklist.jsx';
 import Process from './Process.jsx';
 import CTA from './CTA.jsx';
 import useReveal from '../hooks/useReveal.js';
@@ -212,6 +213,7 @@ export default function ServicesView({ services }) {
         `}</style>
       </section>
 
+      <ServiceChecklist />
       <Process />
       <CTA />
     </>
